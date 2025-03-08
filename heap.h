@@ -64,11 +64,11 @@ public:
 private:
   /// Add whatever helper functions and data members you need below
 
-	void heapify_up(size_t index);
-	void heapify_down(size_t index);
+	void heapify_up(size_t index); //for inserting element
+	void heapify_down(size_t index); //for removing element
   std::vector<T> data;
 	int m;
-	PComparator compare;
+	PComparator compare; // determinen heap order
 	
 
 
@@ -133,14 +133,12 @@ void Heap<T,PComparator>::pop()
 
   }
 
-  
+  //swap first and last element -> remove the last
   std::swap(data.front(), data.back());
   data.pop_back();
   if(!empty()){
 
-   heapify_down(0);
-
-   
+   heapify_down(0); //restore order
 		
   }
 
@@ -149,8 +147,8 @@ void Heap<T,PComparator>::pop()
 template <typename T, typename PComparator>
 void Heap<T, PComparator>::push(const T& item){
 
-	data.push_back(item);
-	heapify_up(data.size() -1);
+	data.push_back(item); //add item to the last
+	heapify_up(data.size() -1); //maintain order
 
   
 }
@@ -158,12 +156,12 @@ void Heap<T, PComparator>::push(const T& item){
 template <typename T, typename PComparator>
 void Heap<T, PComparator>::heapify_up(size_t index){
 	
-  if(index==0){
+  if(index==0){ //if no parent
     return;
   }
   size_t parent_index = (index-1)/m;
 
-  if(compare(data[index],data[parent_index])){
+  if(compare(data[index],data[parent_index])){ //if child has higher priority than parent, swap
     std:: swap(data[index], data[parent_index]);
     heapify_up(parent_index);
     }
@@ -185,19 +183,20 @@ void Heap<T, PComparator>::heapify_down(size_t index){
   if(smallest_chld>=data.size()){
     return;
   }
-  for(size_t i=0; i<= static_cast<size_t>(m); i++){
+  for(size_t i=0; i<= static_cast<size_t>(m); i++){ //search for m children and find smallest
     size_t child = first_chld + i;
 
     if(child<data.size()&&compare(data[child], data[smallest_chld])){
-      smallest_chld = child;
+      smallest_chld = child; 
     }
   }
 
-  if(compare(data[smallest_chld], data[index])){
-    std::swap(data[index], data[smallest_chld]);
-    heapify_down(smallest_chld);
+  if(compare(data[smallest_chld], data[index])){ 
+    std::swap(data[index], data[smallest_chld]);//if found, swap
+    heapify_down(smallest_chld); //recursively
   }
 }
+
 
 #endif
 
